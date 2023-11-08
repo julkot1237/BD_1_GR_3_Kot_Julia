@@ -1,0 +1,37 @@
+CREATE TABLE IF NOT EXISTS rozliczenia.godziny
+(
+    id_godziny integer NOT NULL,
+    data date NOT NULL,
+    liczba_godzin integer,
+    id_pracownika integer NOT NULL,
+    CONSTRAINT godziny_pkey PRIMARY KEY (id_godziny)
+)
+
+CREATE TABLE IF NOT EXISTS rozliczenia.pensje
+(
+    id_pensji integer NOT NULL,
+    stanowisko "char" NOT NULL,
+    kwota integer,
+    id_premii integer,
+    CONSTRAINT pensje_pkey PRIMARY KEY (id_pensji)
+)
+
+CREATE TABLE IF NOT EXISTS rozliczenia.pracownicy
+(
+    id_pracownicy integer NOT NULL,
+    imie "char" NOT NULL,
+    nazwisko "char" NOT NULL,
+    adres "char" NOT NULL,
+    telefon integer NOT NULL,
+    CONSTRAINT pracownicy_pkey PRIMARY KEY (id_pracownicy)
+)
+
+
+CREATE TABLE IF NOT EXISTS rozliczenia.premie
+(
+    id_premii integer NOT NULL,
+    rodzaj "char" NOT NULL,
+    kwota integer,
+    CONSTRAINT premie_pkey PRIMARY KEY (id_premii)
+)
+

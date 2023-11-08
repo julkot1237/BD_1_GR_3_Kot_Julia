@@ -1,0 +1,20 @@
+5. SELECT nazwisko, adres
+FROM rozliczenia.pracownicy;
+
+6.SELECT id_godziny, 
+       data, 
+       EXTRACT(dow FROM data) AS dzien, 
+       EXTRACT(month FROM data) AS miesiac
+FROM rozliczenia.godziny;
+
+7. zmień nazwę atrybutu 
+ALTER TABLE rozliczenia.pensje
+RENAME COLUMN kwota TO kwota_brutto;
+  dodaj nowy atrybut
+ALTER TABLE rozliczenia.pensje
+ADD kwota_netto
+   oblicz kwotę netto
+UPDATE rozliczenia.pensje
+SET kwota_netto = kwota_brutto / 1.23;
+   zaktualizuj wartości w tabeli
+SELECT * FROM rozliczenia.pensje;
