@@ -1,0 +1,105 @@
+--ZADANIE 1
+
+--a) 
+SELECT id_pracownika, nazwisko
+FROM ksiegowosc.pracownicy
+
+--b)dostosowując polecenie do wprowadzonych danych zmieniam 1000 na 2500
+SELECT suma.id_pracownika
+FROM ksiegowosc.wynagrodzenie AS suma
+INNER JOIN ksiegowosc.pensja AS pensja ON suma.id_pensji = pensja.id_pensji
+INNER JOIN ksiegowosc.premia AS premia ON suma.id_premii = premia.id_premii
+WHERE (pensja.kwota + premia.kwota) > 2500;
+
+--c)
+SELECT ksiegowosc.pracownicy.id_pracownika
+FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.pracownicy.id_pracownika = ksiegowosc.wynagrodzenie.id_pracownika
+JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji
+WHERE ksiegowosc.wynagrodzenie.id_premii ISNULL AND ksiegowosc.pensja.kwota > 2500;
+
+--d)
+SELECT imie,nazwisko
+FROM ksiegowosc.pracownicy
+WHERE imie LIKE 'J%'
+
+--e)dostosowując do danych zmieniam 'n' na  'o'
+SELECT imie,nazwisko
+FROM ksiegowosc.pracownicy
+WHERE (nazwisko LIKE '%o%' OR nazwisko LIKE 'O%') AND imie LIKE '%a'
+
+--f)ze wzgledu na mala ilosc danych zmieniam 160h na 10h
+SELECT imie,nazwisko,SUM(liczba_godzin)
+FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika=ksiegowosc.godziny.id_pracownika
+GROUP BY ksiegowosc.pracownicy.id_pracownika
+HAVING SUM(liczba_godzin)>10
+-- nie moze byc where bo nie przyjmuje sum
+
+--g) 
+SELECT imie,nazwisko
+FROM ksiegowosc.wynagrodzenie
+JOIN ksiegowosc.pracownicy ON ksiegowosc.wynagrodzenie.id_pracownika =ksiegowosc.pracownicy.id_pracownika
+JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji
+JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii
+WHERE (ksiegowosc.pensja.kwota + ksiegowosc.premia.kwota) < 5000 AND (ksiegowosc.pensja.kwota + ksiegowosc.premia.kwota)>2500;
+
+--h) nadgodziny jako 10
+SELECT imie,nazwisko,SUM(liczba_godzin)
+FROM ksiegowosc.pracownicy
+JOIN ksiegowosc.godziny ON ksiegowosc.pracownicy.id_pracownika=ksiegowosc.godziny.id_pracownika
+JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.wynagrodzenie.id_pracownika = ksiegowosc.pracownicy.id_pracownika
+GROUP BY ksiegowosc.pracownicy.id_pracownika, ksiegowosc.pracownicy.imie, ksiegowosc.pracownicy.nazwisko,ksiegowosc.wynagrodzenie.id_premii
+HAVING SUM(liczba_godzin)>10 AND ksiegowosc.wynagrodzenie.id_premii ISNULL
+ 
+
+--i)
+SELECT imie,nazwisko
+FROM ksiegowosc.wynagrodzenie
+JOIN ksiegowosc.pracownicy ON ksiegowosc.wynagrodzenie.id_pracownika =ksiegowosc.pracownicy.id_pracownika
+JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji
+ORDER by pensja ASC
+
+--j)
+SELECT imie,nazwisko
+FROM ksiegowosc.wynagrodzenie
+JOIN ksiegowosc.pracownicy ON ksiegowosc.wynagrodzenie.id_pracownika =ksiegowosc.pracownicy.id_pracownika
+JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji
+JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii
+ORDER by (ksiegowosc.pensja.kwota + ksiegowosc.premia.kwota) DESC
+
+--k)
+SELECT stanowisko, COUNT(*)
+FROM ksiegowosc.pensja
+GROUP BY stanowisko;
+
+--l)
+SELECT stanowisko, AVG(kwota) AS średnia_płaca, MIN(kwota) AS minimalna_płaca,MAX(kwota) AS maksymalna_płaca
+FROM ksiegowosc.pensja
+WHERE stanowisko = 'hr'
+GROUP BY stanowisko;
+
+--m)
+SELECT SUM(premia.kwota+pensja.kwota) AS suma_wynagrodznia
+FROM ksiegowosc.wynagrodzenie
+JOIN ksiegowosc.pensja ON ksiegowosc.wynagrodzenie.id_pensji = ksiegowosc.pensja.id_pensji
+JOIN ksiegowosc.premia ON ksiegowosc.wynagrodzenie.id_premii = ksiegowosc.premia.id_premii
+
+--o)
+SELECT stanowisko, COUNT(id_premii) 
+FROM ksiegowosc.pensja
+JOIN ksiegowosc.wynagrodzenie ON ksiegowosc.wynagrodzenie.id_pensji=ksiegowosc.pensja.id_pensji
+GROUP BY stanowisko;
+
+--p)
+
+DELETE FROM ksiegowosc.pracownicy
+WHERE id_pracownika IN(
+ SELECT id_pracownika
+ FROM ksiegowosc.wynagrodzenie
+ JOIN ksiegowosc.pensja ON ksiegowosc.pensja.id_pensji =ksiegowosc.wynagrodzenie.id_pensji
+ WHERE kwota<1200 );
+
+
+
+
