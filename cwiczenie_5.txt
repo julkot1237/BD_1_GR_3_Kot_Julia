@@ -1,0 +1,57 @@
+1,2
+
+CREATE TABLE Zamowienia (
+    id_produktu INT PRIMARY KEY,
+    nazwa_produktu VARCHAR(100) UNIQUE,
+    id_klienta INT,
+    nazwa_klienta VARCHAR(50) UNIQUE,
+    data_zamowienia DATE,
+    cena_produktu DECIMAL(10, 2),
+    ilosc INT,
+    VAT DECIMAL(5, 2),
+    suma_brutto DECIMAL(10, 2),
+    suma_netto DECIMAL(10, 2),
+    
+    FOREIGN KEY (id_produktu) REFERENCES Produkty(id_produktu),
+    FOREIGN KEY (id_klienta) REFERENCES Klienci(id_klienta)
+);
+
+CREATE TABLE Produkty (
+    id_produktu INT PRIMARY KEY,
+    nazwa_produktu VARCHAR(255) UNIQUE,
+    cena_produktu DECIMAL(10, 2),
+    VAT DECIMAL(5, 2)
+);
+
+CREATE TABLE Klienci (
+    id_klienta INT PRIMARY KEY,
+    nazwa_klienta VARCHAR(100) UNIQUE
+);
+
+
+Wypisz zależności funkcyjne:
+Id_klienta, data_zamowienia -> ilość, suma_brutto, suma_netto
+nazwa_produktu -> cena_produktu, VAT
+
+Klucze kandydujące: Id_produktu, Id_klienta, data_zamownienia
+3
+CREATE TABLE Pomieszczenia (
+    id_pomieszczenia INT PRIMARY KEY AUTO_INCREMENT,
+    numer_pomieszczenia VARCHAR(255),
+    id_budynku INT,
+    powierzchnia DECIMAL(10, 2),
+    liczba_okien INT,
+    liczba_drzwi INT,
+    FOREIGN KEY (id_budynku) REFERENCES Budynki(id_budynku)
+);
+
+Zależności funkcyjne:
+id_pomieszczenia -> numer_pomieszczenia, id_budynku, powierzchnia, liczba_okien, liczba_drzwi
+id_budynku -> ulica, miasto, kod_pocztowy
+
+
+
+
+
+
+
