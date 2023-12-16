@@ -1,0 +1,76 @@
+--1
+CREATE OR REPLACE FUNCTION generate_fibonacci(n INT)
+RETURNS TABLE (fibonacci_value INT)
+AS $$
+DECLARE
+    a INT := 0;
+    b INT := 1;
+    temp INT;
+BEGIN
+    FOR i IN 1..n LOOP
+        fibonacci_value := a;
+        temp := a;
+        a := b;
+        b := temp + b;
+        RETURN NEXT;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE print_fibonacci(n INT)
+AS $$
+DECLARE
+    fib_row RECORD;
+BEGIN
+    FOR fib_row IN (SELECT * FROM generate_fibonacci(n)) LOOP
+        RAISE NOTICE 'Fibonacci: %', fib_row.fibonacci_value;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+CALL print_fibonacci(10);
+
+
+--2
+CREATE OR REPLACE FUNCTION uppercase_lastname()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.lastname := UPPER(NEW.lastname);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER uppercase_lastname_trigger
+BEFORE INSERT OR UPDATE ON Persons
+FOR EACH ROW
+EXECUTE FUNCTION uppercase_lastname();
+
+
+--3
+CREATE OR REPLACE FUNCTION tax_rate_monitoring()
+RETURNS TRIGGER AS $$
+DECLARE
+    old_tax_rate DECIMAL;
+    new_tax_rate DECIMAL;
+BEGIN
+   
+    old_tax_rate := COALESCE(OLD.TaxRate, 0);
+    new_tax_rate := COALESCE(NEW.TaxRate, 0);
+
+    
+    IF ABS(new_tax_rate - old_tax_rate) / old_tax_rate > 0.3 THEN
+        RAISE EXCEPTION 'Zmiana wartości pola TaxRate o więcej niż 30%% jest niedozwolona.';
+    END IF;
+
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tax_rate_monitoring
+BEFORE UPDATE ON YourTableName
+FOR EACH ROW
+EXECUTE FUNCTION tax_rate_monitoring();
+
+
+
