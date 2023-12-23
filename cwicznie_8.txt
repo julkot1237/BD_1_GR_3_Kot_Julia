@@ -1,0 +1,55 @@
+-1
+WITH EmployeeSalaryCTE AS (
+    SELECT
+        e.businessentityid,
+        p.firstname,
+        p.lastname,
+        MAX(eph.Rate) AS MaxSalary
+    FROM
+        humanresources.employee AS e
+    JOIN
+        humanresources.employeepayhistory AS eph ON e.businessentityid = eph.businessentityid
+    JOIN
+        person.person AS p ON e.businessentityid = p.businessentityid
+    GROUP BY
+        e.businessentityid, p.firstname, p.lastname
+)
+
+INSERT INTO TempEmployeeInfo (businessentityid, FirstName, LastName, MaxSalary)
+SELECT
+    businessentityid,
+    firstname,
+    lastname,
+    MaxSalary
+FROM
+    EmployeeSalaryCTE;
+
+
+-2
+
+WITH CustomerSalespersonCTE AS (
+    SELECT
+        c.CustomerID,
+        c.TerritoryID,
+        sp.firstname AS SalespersonFirstName,
+        sp.lastname AS SalespersonLastName
+    FROM
+        sales.customer AS c
+    JOIN
+        sales.salesterritory AS st ON c.TerritoryID = st.TerritoryID
+    JOIN
+        sales.salesperson AS sp ON st.SalesPersonID = sp.BusinessEntityID
+)
+
+-- Wyświetlenie wyników
+SELECT
+    CustomerID,
+    TerritoryID,
+    SalespersonFirstName,
+    SalespersonLastName
+FROM
+    CustomerSalespersonCTE;
+
+
+
+
