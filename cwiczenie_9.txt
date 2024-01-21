@@ -17,6 +17,10 @@ CREATE INDEX idx_customerid ON sales.customer (customerid);
 CREATE INDEX idx_territoryid ON sales.customer (territoryid);
 CREATE INDEX idx_orderdate ON sales.salesorderheader (orderdate);
 
+WNIOSKI:
+Dodanie indeksu może przyspieszyć operacje (poprawić jej wydajność) szczególnie, jeśli tabela jest duża (dużo danych) np. dodanie indeksu na territoryid --> przyspiesza zapytanie WHERE (..)
+Indeksowanie umożliwia szybszy dostęp do danych bez konieczności przeszukiwania całych tabeli.
+
 
 --2
 --a
